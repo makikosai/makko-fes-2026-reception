@@ -250,15 +250,14 @@ function manualReception(){
   );
 
 
-  fetch(
-    GAS_URL +
-    "?qr=" +
-    encodeURIComponent(qrID)
-  )
+    const callbackName =
+    "receptionCallback_" + Date.now();
 
-  .then(response => response.json())
 
-  .then(res => {
+  window[callbackName] = function(res){
+
+    delete window[callbackName];
+
 
     if(res.success){
 
@@ -297,21 +296,44 @@ function manualReception(){
       .getElementById("nextBtn")
       .style.display = "inline-block";
 
-  })
 
-  .catch(error => {
+    script.remove();
+
+  };
+
+
+  const script =
+    document.createElement("script");
+
+
+  script.src =
+    GAS_URL +
+    "?qr=" +
+    encodeURIComponent(qrID) +
+    "&callback=" +
+    callbackName;
+
+
+  script.onerror = function(){
+
+    delete window[callbackName];
+
+    script.remove();
+
 
     showResult(
 
       "⚠️ 通信エラー<br><br>" +
-
-      error.message,
+      "GASとの通信に失敗しました",
 
       "error"
 
     );
 
-  });
+  };
+
+
+  document.body.appendChild(script);
 
 }
 
