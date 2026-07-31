@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1">
+
+<title>牧高祭2026 受付</title>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+<style>
+
+body{
+  font-family:sans-serif;
+  text-align:center;
+  background:#f5f5f5;
+  margin:0;
+  padding:20px;
+}
+
+.container{
+  max-width:500px;
+  margin:auto;
+  background:white;
+  padding:20px;
+  border-radius:15px;
+  box-shadow:0 2px 10px rgba(0,0,0,.15);
+}
+
+h1{
+  margin-top:5px;
+}
+
+#reader{
+  width:100%;
+  margin:20px auto;
+}
+
+#result{
+  margin:20px 0;
+  padding:15px;
+  border-radius:10px;
+  font-weight:bold;
+}
+
+.success{
+  background:#d4edda;
+  color:#155724;
+}
+
+.warning{
+  background:#fff3cd;
+  color:#856404;
+}
+
+.error{
+  background:#f8d7da;
+  color:#721c24;
+}
+
+input{
+  width:90%;
+  max-width:350px;
+  padding:12px;
+  font-size:18px;
+  box-sizing:border-box;
+}
+
+button{
+  padding:12px 25px;
+  margin:10px;
+  font-size:18px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+#nextBtn{
+  display:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>
+🏫 牧高祭2026<br>
+受付
+</h1>
+
+<h2>
+📷 QRコード受付
+</h2>
+
+<div id="reader"></div>
+
+<div id="result">
+QRコードをカメラにかざしてください
+</div>
+
+<hr>
+
+<p>
+または受付番号を入力
+</p>
+
+<input
+  id="qrID"
+  placeholder="MK2026-XXXXXXXX"
+>
+
+<br>
+
+<button onclick="manualReception()">
+受付
+</button>
+
+<button
+  id="nextBtn"
+  onclick="restartCamera()"
+>
+次の受付へ
+</button>
+
+</div>
+
+
+<script>
+
+let html5QrCode;
+
+
+/* =========================
+   GAS WebアプリURL
+   ========================= */
+
+const GAS_URL =
+"https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbyj7HXEiiIkuV9u_5GGjUw3-48LzIa0aQOyo0Mb0AezzneG-wYz8nDkFTdDncQoZPd4/exec/exec";
+
+
+/* =========================
+   カメラ開始
+   ========================= */
+
+function startCamera(){
+
+  Html5Qrcode.getCameras()
+
+  .then(devices => {
+
+    if(!devices || devices.length === 0){
+
+      showResult(
+        "⚠️ カメラが見つかりません",
+        "error"
+      );
+
+      return;
+    }
+
+
+    html5QrCode =
+      new Html5Qrcode("reader");
+
+
+    html5QrCode.start(
+
+      devices[0].id,
+
+      {
+        fps:10,
+        qrbox:250
+      },
+
+      (decodedText)=>{
+
+        document
+          .getElementById("qrID")
+          .value = decodedText;
+
+
+        html5QrCode.stop();
+
+
+        manualReception();
+
+      }
+
+    )
+
+    .catch(err => {
+
+      showResult(
+        "⚠️ カメラを起動できません<br><br>" +
+        String(err),
+        "error"
+      );
+
+    });
+
+  })
+
+  .catch(err => {
+
+    showResult(
+      "⚠️ カメラを取得できません<br><br>" +
+      String(err),
+      "error"
+    );
+
+  });
+
+}
+
+
+/* =========================
+   受付処理
+   ========================= */
+
+function manualReception(){
+
+  const qrID =
+    document
+      .getElementById("qrID")
+      .value
+      .trim();
+
+
+  if(qrID === ""){
+
+    showResult(
+      "受付番号を入力してください",
+      "error"
+    );
+
+    return;
+  }
+
+
+  showResult(
+    "受付処理中です…",
+    ""
+  );
+
+
+  fetch(
+    GAS_URL +
+    "?qr=" +
+    encodeURIComponent(qrID)
+  )
+
+  .then(response => response.json())
+
+  .then(res => {
+
+    if(res.success){
+
+      showResult(
+
+        "🎉 受付完了 🎉<br><br>" +
+
+        res.name + " さん<br>" +
+
+        "区分：" + res.type + "<br>" +
+
+        "来場日：" + res.day + "<br><br>" +
+
+        "牧高祭2026へ<br>" +
+
+        "ようこそ！",
+
+        "success"
+
+      );
+
+    }else{
+
+      showResult(
+
+        "⚠️ " + res.message,
+
+        "warning"
+
+      );
+
+    }
+
+
+    document
+      .getElementById("nextBtn")
+      .style.display = "inline-block";
+
+  })
+
+  .catch(error => {
+
+    showResult(
+
+      "⚠️ 通信エラー<br><br>" +
+
+      error.message,
+
+      "error"
+
+    );
+
+  });
+
+}
+
+
+/* =========================
+   結果表示
+   ========================= */
+
+function showResult(msg,type){
+
+  const result =
+    document.getElementById("result");
+
+  result.className = type;
+
+  result.innerHTML = msg;
+
+}
+
+
+/* =========================
+   次の受付
+   ========================= */
+
+function restartCamera(){
+
+  document
+    .getElementById("qrID")
+    .value = "";
+
+  document
+    .getElementById("result")
+    .innerHTML =
+      "QRコードをカメラにかざしてください";
+
+  document
+    .getElementById("result")
+    .className = "";
+
+  document
+    .getElementById("nextBtn")
+    .style.display = "none";
+
+
+  startCamera();
+
+}
+
+
+/* =========================
+   起動
+   ========================= */
+
+window.onload = function(){
+
+  startCamera();
+
+};
+
+</script>
+
+</body>
+</html>
