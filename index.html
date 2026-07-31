@@ -250,13 +250,44 @@ function manualReception(){
   );
 
 
-    const callbackName =
-    "receptionCallback_" + Date.now();
+      const script =
+    document.createElement("script");
 
 
-  window[callbackName] = function(res){
+  script.src =
+    GAS_URL +
+    "?qr=" +
+    encodeURIComponent(qrID) +
+    "&callback=receptionCallback";
 
-    delete window[callbackName];
+
+  script.onload = function(){
+
+    console.log("GASから応答を受信しました");
+
+  };
+
+
+  script.onerror = function(){
+
+    script.remove();
+
+
+    showResult(
+
+      "⚠️ 通信エラー<br><br>" +
+      "GASとの通信に失敗しました",
+
+      "error"
+
+    );
+
+  };
+
+
+  window.receptionCallback = function(res){
+
+    script.remove();
 
 
     if(res.success){
@@ -294,46 +325,15 @@ function manualReception(){
 
     document
       .getElementById("nextBtn")
-      .style.display = "inline-block";
-
-
-    script.remove();
+      .style.display =
+        "inline-block";
 
   };
 
 
-  const script =
-    document.createElement("script");
-
-
-  script.src =
-    GAS_URL +
-    "?qr=" +
-    encodeURIComponent(qrID) +
-    "&callback=" +
-    callbackName;
-
-
-  script.onerror = function(){
-
-    delete window[callbackName];
-
-    script.remove();
-
-
-    showResult(
-
-      "⚠️ 通信エラー<br><br>" +
-      "GASとの通信に失敗しました",
-
-      "error"
-
-    );
-
-  };
-
-
-  document.body.appendChild(script);
+  document
+    .body
+    .appendChild(script);
 
 }
 
