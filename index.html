@@ -136,6 +136,8 @@ QRコードをカメラにかざしてください
 
 let html5QrCode;
 
+// 受付処理の計測用
+let receptionStartTime = 0;
 
 /* =========================
    GAS WebアプリURL
@@ -183,7 +185,14 @@ function startCamera(){
         document
           .getElementById("qrID")
           .value = decodedText;
+            
+        receptionStartTime = performance.now();
 
+        console.log(
+          "📷 QR認識：" +
+          receptionStartTime.toFixed(0) +
+          " ms"
+        );
 
         html5QrCode.stop();
 
@@ -288,7 +297,12 @@ function manualReception(){
 
     script.remove();
 
-
+    console.log(
+      "📡 GAS応答：" +
+      (performance.now() - receptionStartTime).toFixed(0) +
+      " ms"
+    );
+        
     if(res.success){
 
       showResult(
@@ -329,7 +343,12 @@ function manualReception(){
 
   };
 
-
+  console.log(
+    "📡 GAS送信開始：" +
+    (performance.now() - receptionStartTime).toFixed(0) +
+    " ms"
+  );
+      
   document
     .body
     .appendChild(script);
