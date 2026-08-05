@@ -258,51 +258,41 @@ function manualReception(){
   );
 
 
-      const script =
-    document.createElement("script");
+  const requestStart = performance.now();
 
 
-  script.src =
+  console.log(
+    "📡 fetch送信開始"
+  );
+
+
+  fetch(
     GAS_URL +
     "?qr=" +
-    encodeURIComponent(qrID) +
-    "&callback=receptionCallback";
+    encodeURIComponent(qrID)
+  )
 
-
-  script.onload = function(){
-
-    console.log("GASから応答を受信しました");
-
-  };
-
-
-  script.onerror = function(){
-
-    script.remove();
-
-
-    showResult(
-
-      "⚠️ 通信エラー<br><br>" +
-      "GASとの通信に失敗しました",
-
-      "error"
-
-    );
-
-  };
-
-
-  window.receptionCallback = function(res){
-
-    script.remove();
+  .then(response => {
 
     console.log(
-      "📡 GAS応答：" +
-      (performance.now() - receptionStartTime).toFixed(0) +
+      "📡 fetch HTTP応答：" +
+      (performance.now() - requestStart).toFixed(0) +
       " ms"
     );
-        
+
+    return response.json();
+
+  })
+
+  .then(res => {
+
+    console.log(
+      "📡 fetch JSON受信：" +
+      (performance.now() - requestStart).toFixed(0) +
+      " ms"
+    );
+
+
     if(res.success){
 
       showResult(
@@ -341,17 +331,22 @@ function manualReception(){
       .style.display =
         "inline-block";
 
-  };
+  })
 
-  console.log(
-    "📡 GAS送信開始：" +
-    (performance.now() - receptionStartTime).toFixed(0) +
-    " ms"
-  );
-      
-  document
-    .body
-    .appendChild(script);
+  .catch(error => {
+
+    console.error(error);
+
+    showResult(
+
+      "⚠️ 通信エラー<br><br>" +
+      error.message,
+
+      "error"
+
+    );
+
+  });
 
 }
 
