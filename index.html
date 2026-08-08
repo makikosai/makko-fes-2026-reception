@@ -332,17 +332,39 @@ function manualReception(){
          
     }else{
 
-  showResult(
+  if(res.message === "登録がありません"){
 
-    "⚠️ <span style='font-size:34px;'>受付済みです</span><br><br>" +
+    showResult(
 
-    "<span style='font-size:24px;'>" +
-    res.message +
-    "</span>",
+      "❌ <span style='font-size:34px;'>受付できません</span><br><br>" +
 
-    "warning"
+      "<span style='font-size:24px;'>" +
+      "このQRコードは登録されていません" +
+      "</span><br><br>" +
 
-  );
+      "<span style='font-size:20px;'>" +
+      "QRコードを確認してください" +
+      "</span>",
+
+      "error"
+
+    );
+
+  }else{
+
+    showResult(
+
+      "⚠️ <span style='font-size:34px;'>受付済みです</span><br><br>" +
+
+      "<span style='font-size:24px;'>" +
+      res.message +
+      "</span>",
+
+      "warning"
+
+    );
+
+  }
 
 }
 
