@@ -334,6 +334,8 @@ function manualReception(){
 
   if(res.message === "登録がありません"){
 
+    playErrorSound();
+        
     showResult(
 
       "❌ <span style='font-size:34px;'>受付できません</span><br><br>" +
@@ -352,6 +354,8 @@ function manualReception(){
 
   }else{
 
+    playWarningSound();
+        
     showResult(
 
       "⚠️ <span style='font-size:34px;'>受付済みです</span><br><br>" +
@@ -428,6 +432,74 @@ function playSuccessSound(){
 
   oscillator.stop(
     audioContext.currentTime + 0.3
+  );
+
+}
+
+function playWarningSound(){
+
+  const audioContext =
+    new (window.AudioContext || window.webkitAudioContext)();
+
+  const oscillator =
+    audioContext.createOscillator();
+
+  const gain =
+    audioContext.createGain();
+
+  oscillator.connect(gain);
+  gain.connect(audioContext.destination);
+
+  oscillator.frequency.value = 440;
+
+  gain.gain.setValueAtTime(
+    0.2,
+    audioContext.currentTime
+  );
+
+  gain.gain.exponentialRampToValueAtTime(
+    0.01,
+    audioContext.currentTime + 0.5
+  );
+
+  oscillator.start();
+
+  oscillator.stop(
+    audioContext.currentTime + 0.5
+  );
+
+}
+
+function playErrorSound(){
+
+  const audioContext =
+    new (window.AudioContext || window.webkitAudioContext)();
+
+  const oscillator =
+    audioContext.createOscillator();
+
+  const gain =
+    audioContext.createGain();
+
+  oscillator.connect(gain);
+  gain.connect(audioContext.destination);
+
+  oscillator.frequency.value = 220;
+
+  gain.gain.setValueAtTime(
+    0.25,
+    audioContext.currentTime
+  );
+
+  gain.gain.exponentialRampToValueAtTime(
+    0.01,
+    audioContext.currentTime + 0.4
+  );
+
+  oscillator.start();
+
+  oscillator.stop(
+    audioContext.currentTime + 0.4
   );
 
 }
