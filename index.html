@@ -332,15 +332,19 @@ function manualReception(){
          
     }else{
 
-      showResult(
+  showResult(
 
-        "⚠️ " + res.message,
+    "⚠️ <span style='font-size:34px;'>受付済みです</span><br><br>" +
 
-        "warning"
+    "<span style='font-size:24px;'>" +
+    res.message +
+    "</span>",
 
-      );
+    "warning"
 
-    }
+  );
+
+}
 
 
     document
