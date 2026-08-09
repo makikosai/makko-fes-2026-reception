@@ -404,94 +404,23 @@ function manualReception(){
 
 function playSuccessSound(){
 
-  const audioContext =
-    new (window.AudioContext || window.webkitAudioContext)();
+  const audio =
+    new Audio("stu9-cute-cat-352656.mp3");
 
-  const oscillator =
-    audioContext.createOscillator();
+  audio.volume = 0.8;
 
-  const gain =
-    audioContext.createGain();
-
-  oscillator.connect(gain);
-  gain.connect(audioContext.destination);
-
-  oscillator.type = "sine";
-
-  const now = audioContext.currentTime;
-
-  // ニャーっぽく「上がって、少し下がる」
-  oscillator.frequency.setValueAtTime(600, now);
-  oscillator.frequency.exponentialRampToValueAtTime(
-    900,
-    now + 0.15
-  );
-
-  oscillator.frequency.exponentialRampToValueAtTime(
-    650,
-    now + 0.45
-  );
-
-  gain.gain.setValueAtTime(0.2, now);
-
-  gain.gain.exponentialRampToValueAtTime(
-    0.01,
-    now + 0.5
-  );
-
-  oscillator.start(now);
-
-  oscillator.stop(now + 0.5);
+  audio.play();
 
 }
       
 function playWarningSound(){
 
-  const audioContext =
-    new (window.AudioContext || window.webkitAudioContext)();
+  const audio =
+    new Audio("dragon-studio-gentle-horse-neigh-3-499648.mp3");
 
-  const oscillator =
-    audioContext.createOscillator();
+  audio.volume = 0.8;
 
-  const gain =
-    audioContext.createGain();
-
-  oscillator.connect(gain);
-  gain.connect(audioContext.destination);
-
-  oscillator.type = "sawtooth";
-
-  const now = audioContext.currentTime;
-
-  // ヒヒーンっぽく高く上がる
-  oscillator.frequency.setValueAtTime(
-    300,
-    now
-  );
-
-  oscillator.frequency.exponentialRampToValueAtTime(
-    700,
-    now + 0.25
-  );
-
-  oscillator.frequency.exponentialRampToValueAtTime(
-    500,
-    now + 0.55
-  );
-
-  gain.gain.setValueAtTime(
-    0.18,
-    now
-  );
-
-  gain.gain.exponentialRampToValueAtTime(
-    0.01,
-    now + 0.6
-  );
-
-  oscillator.start(now);
-
-  oscillator.stop(now + 0.6);
+  audio.play();
 
 }
       
