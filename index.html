@@ -40,7 +40,7 @@ h1{
 }
 
 #reader.hidden{
-  display:none;
+  display:none !important;
 }
 
 #result{
@@ -258,6 +258,9 @@ function startCamera(){
 
         html5QrCode.stop();
 
+        document
+          .getElementById("reader")
+          .classList.add("hidden");
 
         manualReception();
 
@@ -634,6 +637,10 @@ function showResult(msg,type){
 function restartCamera(){
 
   document
+    .getElementById("reader")
+    .classList.remove("hidden");
+
+  document
     .getElementById("qrID")
     .value = "";
 
@@ -649,7 +656,6 @@ function restartCamera(){
   document
     .getElementById("nextBtn")
     .style.display = "none";
-
 
   startCamera();
 
