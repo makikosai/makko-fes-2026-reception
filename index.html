@@ -233,14 +233,19 @@ function startCamera(){
       new Html5Qrcode("reader");
 
 
-    html5QrCode.start(
+    const frontCamera =
+  devices.find(device =>
+    /front|user|前面|内側/i.test(device.label)
+  ) || devices[0];
 
-      devices[0].id,
+html5QrCode.start(
 
-      {
-        fps:10,
-        qrbox:250
-      },
+  frontCamera.id,
+
+  {
+    fps:10,
+    qrbox:250
+  },
 
       (decodedText)=>{
 
