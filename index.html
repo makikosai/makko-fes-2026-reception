@@ -208,6 +208,36 @@ const GAS_URL =
 "https://script.google.com/macros/s/AKfycbyeoeZYPKrT9tLk-CeAYQopMzneANW4DVWza-b7WuXEzxwl1WWvPlhTZoer6s9777Qp/exec";
 
 /* =========================
+   イベント名取得
+   ========================= */
+
+fetch(
+  GAS_URL + "?settings=1"
+)
+
+.then(response => response.json())
+
+.then(data => {
+
+  if(data.eventName){
+
+    document.querySelector("h1").innerHTML =
+      "🏫 " + data.eventName + "<br>受付";
+
+  }
+
+})
+
+.catch(error => {
+
+  console.error(
+    "イベント名取得エラー:",
+    error
+  );
+
+});
+      
+/* =========================
    カメラ開始
    ========================= */
 
