@@ -88,13 +88,9 @@ p{
 
 <div class="container">
 
-<h1 id="eventName">
-読み込み中...
-</h1>
-
-<h2>
+<h1>
 事前申込
-</h2>
+</h1>
 
 <p>
 以下のボタンから事前申込を行ってください。
@@ -131,45 +127,6 @@ p{
 </div>
 
 </div>
-
-
-<script>
-
-const GAS_URL =
-"https://script.google.com/macros/s/AKfycbyeoeZYPKrT9lLk-CeAYQopMzneANW4DVWza-b7WuXEzxwl1WWvPlhTZoer6s9777Qp/exec";
-
-
-fetch(
-  GAS_URL + "?settings=1"
-)
-
-.then(response => response.json())
-
-.then(data => {
-
-  if(data.eventName){
-
-    document.getElementById("eventName")
-      .textContent = data.eventName;
-
-    document.title =
-      data.eventName + " 事前申込";
-
-  }
-
-})
-
-.catch(error => {
-
-  console.error(
-    "イベント名取得エラー:",
-    error
-  );
-
-});
-
-</script>
-
 
 </body>
 
